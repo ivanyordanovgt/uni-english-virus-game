@@ -31,6 +31,8 @@ loaded_punishments = {
     "pop_up": lambda: True,
     "fill_up_pc": create_full_1gb_file
 }
+
+
 class StartPage:
     def __init__(self):
         self.difficulty = None
@@ -43,6 +45,7 @@ class StartPage:
         self.PrepareMessage()
         self.difficulty = difficituly
         self.punishments = toml_settings['difficulties'][difficituly.lower()]
+
     def animate_text(self, label, text, func, index=0):
         if index < len(text):
             label.configure(text=text[:index + 1])
@@ -57,7 +60,8 @@ class StartPage:
 
         for i in range(len(toml_settings["difficulties"]["buttons"])):
             CTkButton(
-                self.start_frame, text=toml_settings["difficulties"]["buttons"][i], font=("Arial MS", 30), width=250, fg_color="#690101",
+                self.start_frame, text=toml_settings["difficulties"]["buttons"][i], font=("Arial MS", 30), width=250,
+                fg_color="#690101",
                 hover_color="#a30303",
                 command=lambda i=i: self.start_game(toml_settings["difficulties"]["buttons"][i])
             ).place(x=210, y=200 + (70 * i))
@@ -79,7 +83,9 @@ class Punishment:
     def __init__(self):
         self.last_message_coords = [-100, 100]
         self.last_message_coords_start = [-100, 100]
-
+        self.punishments = loaded_punishments
+        if "pop_up" in loaded_punishments:
+            self.punishments['pop_up'] = self.pop_up
     def show_error_message(self, x, y):
         error_window = CTkToplevel(master)
         error_window.title("Error Message")
@@ -112,6 +118,10 @@ class Punishment:
             self.show_error_message(x, y)
             self.last_message_coords = [x + 50, y + 50]
             c += 1
+
+    def random_punishment(self):
+        punishment_name = random.choice(list(self.punishments.keys()))
+        self.punishments[punishment_name]()
 
 
 class Game(StartPage):
@@ -165,7 +175,7 @@ class Game(StartPage):
             winsound.PlaySound("SystemAsterisk", winsound.SND_ASYNC)
             self.hint_word = []
             for word in self.correct_word.split(" "):
-                if self.wrong_count+1 >= len(word):
+                if self.wrong_count + 1 >= len(word):
                     self.wrong_count = 5
                     break
                 self.hint_word.append(reveal_random_letters(word, self.wrong_count + 1))
@@ -180,7 +190,7 @@ class Game(StartPage):
 
     def punishment(self):
         self.cancel_timer()
-        self.punish.pop_up()
+        self.punish.random_punishment()
 
     def update_timer_pos(self):
         self.timer_window.geometry(f"500x100+{random.randint(100, 1600)}+{random.randint(100, 900)}")
