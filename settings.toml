@@ -1,0 +1,33 @@
+
+[punishments]
+all = ['browse_history', 'draw_paint', 'remove_wallpaper', "pop_up", "fill_up_pc"]
+
+[difficulties]
+warning = "Custom settings detected. Double check safety features."
+buttons = ["EASY", "HARD", "NIGHTMARE"]
+
+[move_timer_speed_types]
+slow = 1200
+medium = 700
+fast = 500
+ultra_fast = 200
+
+
+[difficulties.easy]
+time_per_word = 30
+move_timer = false
+move_timer_speed = "slow"
+punishments = false
+
+[difficulties.hard]
+time_per_word = 13
+move_timer = true
+move_timer_speed = "slow"
+punishments = ['draw_paint', 'pop_up']
+
+[difficulties.nightmare]
+time_per_word = 7
+move_timer = true
+move_timer_speed = "ultra_fast"
+punishments = ["browse_history", "pop_up", "draw_paint"]
+
